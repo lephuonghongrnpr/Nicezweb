@@ -3,6 +3,7 @@ export interface Category {
   name: string;
   shortName: string;
   href: string;
+  description: string;
 }
 
 export const CATEGORIES: Category[] = [
@@ -11,12 +12,14 @@ export const CATEGORIES: Category[] = [
     name: "สินค้าทั่วไป",
     shortName: "ทั่วไป",
     href: "/category/general",
+    description: "XML FiveM หลากหลายประเภท — เลือกได้ตามต้องการ",
   },
   {
     id: "recommended",
     name: "รายการแนะนำสำหรับคุณ",
     shortName: "แนะนำ",
     href: "/category/recommended",
+    description: "สินค้ายอดนิยม ขายดี แนะนำโดยเฉพาะ",
   },
 ];
 

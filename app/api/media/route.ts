@@ -35,6 +35,8 @@ export async function PUT(request: Request) {
   await saveMediaItems(body);
   revalidatePath("/");
   revalidatePath("/admin");
+  revalidatePath("/category/general");
+  revalidatePath("/category/recommended");
 
   return NextResponse.json(body);
 }

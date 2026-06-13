@@ -4,6 +4,7 @@ import { list, put } from "@vercel/blob";
 import { DEFAULT_CATEGORY_ID } from "@/lib/categories";
 
 export type MediaType = "image" | "video";
+export type ProductBadge = "new" | "hot" | "sale" | null;
 
 export interface MediaItem {
   id: string;
@@ -12,6 +13,11 @@ export interface MediaItem {
   alt: string;
   videoSrc?: string;
   categoryId: string;
+  name: string;
+  price: number;
+  description?: string;
+  buyUrl?: string;
+  badge?: ProductBadge;
 }
 
 const DATA_FILE = path.join(process.cwd(), "data", "media.json");
@@ -25,6 +31,10 @@ function normalizeItems(items: MediaItem[]): MediaItem[] {
   return items.map((item) => ({
     ...item,
     categoryId: item.categoryId ?? DEFAULT_CATEGORY_ID,
+    name: item.name ?? item.alt,
+    price: typeof item.price === "number" ? item.price : 259,
+    description: item.description ?? "",
+    badge: item.badge ?? null,
   }));
 }
 

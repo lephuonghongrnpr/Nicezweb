@@ -1,14 +1,134 @@
 [
-  { "id": "1", "type": "video", "src": "/placeholders/item-1.svg", "alt": "XML Update showcase 1", "categoryId": "recommended" },
-  { "id": "2", "type": "image", "src": "/placeholders/item-2.svg", "alt": "XML Update showcase 2", "categoryId": "recommended" },
-  { "id": "3", "type": "image", "src": "/placeholders/item-3.svg", "alt": "XML Update showcase 3", "categoryId": "recommended" },
-  { "id": "4", "type": "image", "src": "/placeholders/item-4.svg", "alt": "XML Update showcase 4", "categoryId": "recommended" },
-  { "id": "5", "type": "video", "src": "/placeholders/item-5.svg", "alt": "XML Update showcase 5", "categoryId": "recommended" },
-  { "id": "6", "type": "image", "src": "/placeholders/item-6.svg", "alt": "XML Update showcase 6", "categoryId": "recommended" },
-  { "id": "7", "type": "image", "src": "/placeholders/item-7.svg", "alt": "XML Update showcase 7", "categoryId": "general" },
-  { "id": "8", "type": "image", "src": "/placeholders/item-8.svg", "alt": "XML Update showcase 8", "categoryId": "general" },
-  { "id": "9", "type": "video", "src": "/placeholders/item-9.svg", "alt": "XML Update showcase 9", "categoryId": "general" },
-  { "id": "10", "type": "image", "src": "/placeholders/item-10.svg", "alt": "XML Update showcase 10", "categoryId": "general" },
-  { "id": "11", "type": "image", "src": "/placeholders/item-11.svg", "alt": "XML Update showcase 11", "categoryId": "general" },
-  { "id": "12", "type": "image", "src": "/placeholders/item-12.svg", "alt": "XML Update showcase 12", "categoryId": "general" }
+  {
+    "id": "1",
+    "type": "video",
+    "src": "/placeholders/item-1.svg",
+    "alt": "XML Car Pack Vol.1",
+    "name": "XML Car Pack Vol.1",
+    "price": 299,
+    "description": "แพ็ครถสำหรับ FiveM 10+ คัน ไฟล์ XML พร้อมติดตั้ง รองรับ ESX / QB",
+    "categoryId": "recommended",
+    "badge": "hot"
+  },
+  {
+    "id": "2",
+    "type": "image",
+    "src": "/placeholders/item-2.svg",
+    "alt": "XML Map City Update",
+    "name": "XML Map City Update",
+    "price": 459,
+    "description": "แมพเมืองใหม่ อัปเดตล่าสุด 2026 ลดแลค โหลดเร็ว",
+    "categoryId": "recommended",
+    "badge": "new"
+  },
+  {
+    "id": "3",
+    "type": "image",
+    "src": "/placeholders/item-3.svg",
+    "alt": "XML Hood Pack Premium",
+    "name": "XML Hood Pack Premium",
+    "price": 199,
+    "description": "ฮูดแต่งรถ Premium 50+ แบบ ใส่ได้ทุกคัน",
+    "categoryId": "recommended",
+    "badge": null
+  },
+  {
+    "id": "4",
+    "type": "image",
+    "src": "/placeholders/item-4.svg",
+    "alt": "XML Weapon Skin Pack",
+    "name": "XML Weapon Skin Pack",
+    "price": 159,
+    "description": "สกินอาวุธ FiveM สวยๆ ไม่โดนแบน",
+    "categoryId": "recommended",
+    "badge": "sale"
+  },
+  {
+    "id": "5",
+    "type": "video",
+    "src": "/placeholders/item-5.svg",
+    "alt": "XML Full Server Bundle",
+    "name": "XML Full Server Bundle",
+    "price": 1299,
+    "description": "แพ็ครวมเซิร์ฟ ครบทุกอย่าง รถ แมพ ฮูด อาวุธ",
+    "categoryId": "recommended",
+    "badge": "hot"
+  },
+  {
+    "id": "6",
+    "type": "image",
+    "src": "/placeholders/item-6.svg",
+    "alt": "XML Police Vehicle Pack",
+    "name": "XML Police Vehicle Pack",
+    "price": 349,
+    "description": "รถตำรวจ FiveM 5 คัน พร้อมไซเรนและ livery",
+    "categoryId": "recommended",
+    "badge": null
+  },
+  {
+    "id": "7",
+    "type": "image",
+    "src": "/placeholders/item-7.svg",
+    "alt": "XML Motorbike Pack",
+    "name": "XML Motorbike Pack",
+    "price": 179,
+    "description": "แพ็คมอเตอร์ไซค์ 8 คัน สำหรับ FiveM",
+    "categoryId": "general",
+    "badge": null
+  },
+  {
+    "id": "8",
+    "type": "image",
+    "src": "/placeholders/item-8.svg",
+    "alt": "XML Interior MLO",
+    "name": "XML Interior MLO",
+    "price": 399,
+    "description": "MLO อินทีเรียร์สำหรับร้านค้า บ้าน ออฟฟิศ",
+    "categoryId": "general",
+    "badge": "new"
+  },
+  {
+    "id": "9",
+    "type": "video",
+    "src": "/placeholders/item-9.svg",
+    "alt": "XML Drift Car Pack",
+    "name": "XML Drift Car Pack",
+    "price": 259,
+    "description": "รถ Drift 6 คัน handling ดีเยี่ยม",
+    "categoryId": "general",
+    "badge": null
+  },
+  {
+    "id": "10",
+    "type": "image",
+    "src": "/placeholders/item-10.svg",
+    "alt": "XML Clothing Pack",
+    "name": "XML Clothing Pack",
+    "price": 149,
+    "description": "เสื้อผ้า FiveM 100+ ชิ้น ทั้งชายหญิง",
+    "categoryId": "general",
+    "badge": null
+  },
+  {
+    "id": "11",
+    "type": "image",
+    "src": "/placeholders/item-11.svg",
+    "alt": "XML Sound Pack",
+    "name": "XML Sound Pack",
+    "price": 99,
+    "description": "เสียงเครื่องยนต์และไซเรน คุณภาพสูง",
+    "categoryId": "general",
+    "badge": "sale"
+  },
+  {
+    "id": "12",
+    "type": "image",
+    "src": "/placeholders/item-12.svg",
+    "alt": "XML Starter Pack",
+    "name": "XML Starter Pack",
+    "price": 499,
+    "description": "แพ็คเริ่มต้นเซิร์ฟใหม่ ครบในเซ็ตเดียว",
+    "categoryId": "general",
+    "badge": "hot"
+  }
 ]

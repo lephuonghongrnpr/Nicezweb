@@ -10,9 +10,9 @@ const inter = Inter({
 const siteUrl =
   process.env.NEXT_PUBLIC_SITE_URL ?? "https://xml-update-gallery.vercel.app";
 
-const title = "XML UPDATE";
+const title = "XML FIVEM";
 const description =
-  "XML UPDATE Gallery — แกลเลอรี showcase สินค้าและคอนเทนต์ดิจิทัล";
+  "ร้าน XML สำหรับเซิร์ฟเวอร์ FiveM — รถ แมพ ฮูด อาวุธ ไฟล์พร้อมใช้ อัปเดตฟรี ราคาดี";
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
@@ -29,7 +29,7 @@ export const metadata: Metadata = {
         url: "/placeholders/item-1.svg",
         width: 1200,
         height: 630,
-        alt: "XML UPDATE Gallery",
+        alt: "XML FIVEM Store",
       },
     ],
   },

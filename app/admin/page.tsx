@@ -3,7 +3,7 @@ import AdminLogin from "@/components/admin/AdminLogin";
 import AdminPanel from "@/components/admin/AdminPanel";
 
 export const metadata = {
-  title: "Admin — XML UPDATE",
+  title: "Admin — XML FIVEM",
   robots: { index: false, follow: false },
 };
 

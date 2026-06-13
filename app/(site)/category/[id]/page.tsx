@@ -1,7 +1,7 @@
 import { notFound } from "next/navigation";
 import { getCategoryById } from "@/lib/categories";
 import { getMediaItems } from "@/lib/media";
-import MediaGrid from "@/components/MediaGrid";
+import ProductGrid from "@/components/shop/ProductGrid";
 
 export const dynamic = "force-dynamic";
 
@@ -16,8 +16,8 @@ export async function generateStaticParams() {
 export async function generateMetadata({ params }: CategoryPageProps) {
   const { id } = await params;
   const category = getCategoryById(id);
-  if (!category) return { title: "XML UPDATE" };
-  return { title: `${category.name} — XML UPDATE` };
+  if (!category) return { title: "XML FIVEM" };
+  return { title: `${category.name} — XML FIVEM` };
 }
 
 export default async function CategoryPage({ params }: CategoryPageProps) {
@@ -30,7 +30,12 @@ export default async function CategoryPage({ params }: CategoryPageProps) {
   return (
     <main>
       <h1 className="sr-only">{category.name}</h1>
-      <MediaGrid items={items} categoryId={id} title={category.name} />
+      <ProductGrid
+        items={items}
+        categoryId={id}
+        title={category.name}
+        subtitle={category.description}
+      />
     </main>
   );
 }

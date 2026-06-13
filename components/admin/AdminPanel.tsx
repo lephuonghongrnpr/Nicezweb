@@ -13,8 +13,12 @@ function emptyItem(): MediaItem {
     id: Date.now().toString(36),
     type: "image",
     src: "/placeholders/item-2.svg",
-    alt: "รายการใหม่",
+    alt: "สินค้าใหม่",
+    name: "สินค้าใหม่",
+    price: 259,
+    description: "",
     categoryId: DEFAULT_CATEGORY_ID,
+    badge: null,
   };
 }
 
@@ -124,8 +128,8 @@ export default function AdminPanel() {
     <div className="min-h-screen bg-black text-white">
       <header className="sticky top-0 z-10 flex items-center justify-between border-b border-white/10 bg-black/95 px-4 py-3 backdrop-blur sm:px-6">
         <div>
-          <h1 className="text-base font-semibold">Admin — จัดการรูปภาพ</h1>
-          <p className="text-xs text-white/50">{items.length} รายการ</p>
+          <h1 className="text-base font-semibold">Admin — XML FIVEM</h1>
+          <p className="text-xs text-white/50">{items.length} สินค้า</p>
         </div>
         <div className="flex items-center gap-2">
           {message && <span className="text-xs text-emerald-400">{message}</span>}
@@ -153,7 +157,7 @@ export default function AdminPanel() {
         <button
           type="button"
           onClick={handleAdd}
-          className="mb-6 flex items-center gap-2 rounded-lg bg-emerald-500 px-4 py-2 text-sm font-medium text-black hover:bg-emerald-400"
+          className="mb-6 flex items-center gap-2 rounded-lg bg-orange-500 px-4 py-2 text-sm font-medium text-white hover:bg-orange-400"
         >
           <Plus className="h-4 w-4" />
           เพิ่มรายการ
@@ -239,32 +243,68 @@ export default function AdminPanel() {
                       </option>
                     ))}
                   </select>
+                  <select
+                    value={item.badge ?? ""}
+                    onChange={(e) =>
+                      updateItem(item.id, {
+                        badge: (e.target.value || null) as MediaItem["badge"],
+                      })
+                    }
+                    className="rounded-lg border border-white/10 bg-black px-3 py-1.5 text-xs outline-none"
+                  >
+                    <option value="">ไม่มี Badge</option>
+                    <option value="new">NEW</option>
+                    <option value="hot">HOT</option>
+                    <option value="sale">SALE</option>
+                  </select>
+                </div>
+
+                <div className="grid gap-3 sm:grid-cols-2">
+                  <div>
+                    <label className="mb-1 block text-xs text-white/50">ชื่อสินค้า</label>
+                    <input
+                      type="text"
+                      value={item.name ?? item.alt}
+                      onChange={(e) =>
+                        updateItem(item.id, { name: e.target.value, alt: e.target.value })
+                      }
+                      className="w-full rounded-lg border border-white/10 bg-black px-3 py-1.5 text-sm outline-none focus:border-orange-400/50"
+                    />
+                  </div>
+                  <div>
+                    <label className="mb-1 block text-xs text-white/50">ราคา (บาท)</label>
+                    <input
+                      type="number"
+                      min={0}
+                      value={item.price ?? 259}
+                      onChange={(e) =>
+                        updateItem(item.id, { price: Number(e.target.value) || 0 })
+                      }
+                      className="w-full rounded-lg border border-white/10 bg-black px-3 py-1.5 text-sm outline-none focus:border-orange-400/50"
+                    />
+                  </div>
                 </div>
 
                 <div>
-                  <label className="mb-1 block text-xs text-white/50">คำอธิบาย (alt)</label>
-                  <input
-                    type="text"
-                    value={item.alt}
-                    onChange={(e) => updateItem(item.id, { alt: e.target.value })}
-                    className="w-full rounded-lg border border-white/10 bg-black px-3 py-1.5 text-sm outline-none focus:border-emerald-400/50"
+                  <label className="mb-1 block text-xs text-white/50">รายละเอียดสินค้า</label>
+                  <textarea
+                    value={item.description ?? ""}
+                    onChange={(e) => updateItem(item.id, { description: e.target.value })}
+                    rows={2}
+                    className="w-full rounded-lg border border-white/10 bg-black px-3 py-1.5 text-sm outline-none focus:border-orange-400/50"
                   />
                 </div>
 
-                {item.type === "video" && (
-                  <div>
-                    <label className="mb-1 block text-xs text-white/50">
-                      URL วิดีโอ (videoSrc)
-                    </label>
-                    <input
-                      type="text"
-                      value={item.videoSrc ?? ""}
-                      onChange={(e) => updateItem(item.id, { videoSrc: e.target.value || undefined })}
-                      placeholder="/uploads/video.mp4"
-                      className="w-full rounded-lg border border-white/10 bg-black px-3 py-1.5 text-sm outline-none focus:border-emerald-400/50"
-                    />
-                  </div>
-                )}
+                <div>
+                  <label className="mb-1 block text-xs text-white/50">ลิงก์สั่งซื้อ (Line/Discord URL)</label>
+                  <input
+                    type="text"
+                    value={item.buyUrl ?? ""}
+                    onChange={(e) => updateItem(item.id, { buyUrl: e.target.value || undefined })}
+                    placeholder="https://line.me/..."
+                    className="w-full rounded-lg border border-white/10 bg-black px-3 py-1.5 text-sm outline-none focus:border-orange-400/50"
+                  />
+                </div>
 
                 <div>
                   <label className="mb-1 block text-xs text-white/50">URL รูป (src)</label>
@@ -272,9 +312,22 @@ export default function AdminPanel() {
                     type="text"
                     value={item.src}
                     onChange={(e) => updateItem(item.id, { src: e.target.value })}
-                    className="w-full rounded-lg border border-white/10 bg-black px-3 py-1.5 text-sm outline-none focus:border-emerald-400/50"
+                    className="w-full rounded-lg border border-white/10 bg-black px-3 py-1.5 text-sm outline-none focus:border-orange-400/50"
                   />
                 </div>
+
+                {item.type === "video" && (
+                  <div>
+                    <label className="mb-1 block text-xs text-white/50">URL วิดีโอ (videoSrc)</label>
+                    <input
+                      type="text"
+                      value={item.videoSrc ?? ""}
+                      onChange={(e) => updateItem(item.id, { videoSrc: e.target.value || undefined })}
+                      placeholder="/uploads/video.mp4"
+                      className="w-full rounded-lg border border-white/10 bg-black px-3 py-1.5 text-sm outline-none focus:border-orange-400/50"
+                    />
+                  </div>
+                )}
               </div>
             </div>
           ))}
