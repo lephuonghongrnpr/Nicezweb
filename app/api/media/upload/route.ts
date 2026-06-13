@@ -1,8 +1,7 @@
 import { NextResponse } from "next/server";
-import fs from "fs/promises";
 import path from "path";
 import { isAdminAuthenticated } from "@/lib/auth";
-import { ensureUploadDir, UPLOAD_DIR } from "@/lib/media";
+import { uploadFile } from "@/lib/media";
 
 const ALLOWED_TYPES = new Set([
   "image/jpeg",
@@ -10,11 +9,40 @@ const ALLOWED_TYPES = new Set([
   "image/webp",
   "image/gif",
   "image/svg+xml",
+  "image/heic",
+  "image/heif",
   "video/mp4",
   "video/webm",
 ]);
 
+const EXT_TO_MIME: Record<string, string> = {
+  ".jpg": "image/jpeg",
+  ".jpeg": "image/jpeg",
+  ".png": "image/png",
+  ".webp": "image/webp",
+  ".gif": "image/gif",
+  ".svg": "image/svg+xml",
+  ".heic": "image/heic",
+  ".heif": "image/heif",
+  ".mp4": "video/mp4",
+  ".webm": "video/webm",
+};
+
 const MAX_SIZE = 50 * 1024 * 1024;
+
+function resolveContentType(file: File): string | null {
+  if (file.type && ALLOWED_TYPES.has(file.type)) {
+    return file.type;
+  }
+
+  const ext = path.extname(file.name).toLowerCase();
+  const mime = EXT_TO_MIME[ext];
+  if (mime && ALLOWED_TYPES.has(mime)) {
+    return mime;
+  }
+
+  return null;
+}
 
 export async function POST(request: Request) {
   if (!(await isAdminAuthenticated())) {
@@ -28,7 +56,8 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "No file provided" }, { status: 400 });
   }
 
-  if (!ALLOWED_TYPES.has(file.type)) {
+  const contentType = resolveContentType(file);
+  if (!contentType) {
     return NextResponse.json({ error: "File type not allowed" }, { status: 400 });
   }
 
@@ -36,19 +65,17 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "File too large (max 50MB)" }, { status: 400 });
   }
 
-  await ensureUploadDir();
-
-  const ext = path.extname(file.name) || (file.type.startsWith("video/") ? ".mp4" : ".jpg");
+  const ext =
+    path.extname(file.name).toLowerCase() ||
+    (contentType.startsWith("video/") ? ".mp4" : ".jpg");
   const filename = `${Date.now()}-${Math.random().toString(36).slice(2, 8)}${ext}`;
-  const filepath = path.join(UPLOAD_DIR, filename);
   const buffer = Buffer.from(await file.arrayBuffer());
 
-  await fs.writeFile(filepath, buffer);
-
-  const isVideo = file.type.startsWith("video/");
-
-  return NextResponse.json({
-    url: `/uploads/${filename}`,
-    isVideo,
-  });
+  try {
+    const result = await uploadFile(filename, buffer, contentType);
+    return NextResponse.json(result);
+  } catch (error) {
+    console.error("Upload failed:", error);
+    return NextResponse.json({ error: "Upload failed" }, { status: 500 });
+  }
 }

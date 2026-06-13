@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import Image from "next/image";
+import MediaImage from "@/components/MediaImage";
 import { Play } from "lucide-react";
 import type { MediaItem } from "@/lib/media";
 
@@ -34,7 +34,7 @@ export default function MediaCard({ item, index, onOpen }: MediaCardProps) {
       onClick={onOpen}
       onKeyDown={handleKeyDown}
     >
-      <Image
+      <MediaImage
         src={item.src}
         alt={item.alt}
         fill
@@ -57,7 +57,7 @@ export default function MediaCard({ item, index, onOpen }: MediaCardProps) {
       </div>
 
       <div className="absolute bottom-2 left-0 right-0 flex justify-center">
-        <Image
+        <MediaImage
           src="/logo.svg"
           alt=""
           width={20}

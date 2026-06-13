@@ -47,11 +47,19 @@ npm start
 
 ```
 NEXT_PUBLIC_SITE_URL=https://your-domain.vercel.app
+ADMIN_PASSWORD=123456
+BLOB_READ_WRITE_TOKEN=vercel_blob_xxx
 ```
 
-ใช้สำหรับ Open Graph URL, robots.txt, sitemap และหน้า admin
+### ตั้งค่า Vercel Blob (สำหรับอัปโหลดรูป)
 
-> **หมายเหตุ:** หน้า admin บันทึกข้อมูลลงไฟล์ (`data/media.json` + `public/uploads/`) จึงทำงานได้เต็มที่บน **local หรือ server ที่มี filesystem เขียนได้** (VPS, Railway, Docker) — บน Vercel serverless การบันทึกจะไม่ persist ระหว่าง deploy
+1. ไปที่ Vercel Dashboard → โปรเจกต์ → **Storage** → **Create Database** → เลือก **Blob**
+2. Connect กับโปรเจกต์ — Vercel จะใส่ `BLOB_READ_WRITE_TOKEN` ให้อัตโนมัติ
+3. Redeploy โปรเจกต์
+
+เมื่อมี Blob token รูปและข้อมูลสินค้าจะเก็บบน Vercel Blob แทนไฟล์ในเครื่อง
+
+> **Local:** ไม่ต้องตั้ง Blob — รูปจะเก็บใน `public/uploads/` อัตโนมัติ
 
 ### วิธีที่ 1: ผ่าน GitHub (แนะนำ)
 

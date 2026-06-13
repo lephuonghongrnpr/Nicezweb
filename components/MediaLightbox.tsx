@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useRef } from "react";
-import Image from "next/image";
+import MediaImage from "@/components/MediaImage";
 import { ChevronLeft, ChevronRight, X } from "lucide-react";
 import type { MediaItem } from "@/lib/media";
 
@@ -126,7 +126,7 @@ export default function MediaLightbox({
           />
         ) : (
           <div className="relative h-[70vh] w-[70vw] max-w-3xl">
-            <Image
+            <MediaImage
               src={item.src}
               alt={item.alt}
               fill

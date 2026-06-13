@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
-import Image from "next/image";
+import MediaImage from "@/components/MediaImage";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { ExternalLink, Loader2, LogOut, Plus, Trash2, Upload } from "lucide-react";
@@ -166,7 +166,8 @@ export default function AdminPanel() {
               className="flex flex-col gap-4 rounded-xl border border-white/10 bg-neutral-950 p-4 sm:flex-row"
             >
               <div className="relative h-32 w-full shrink-0 overflow-hidden rounded-lg bg-black sm:h-28 sm:w-28">
-                <Image
+                <MediaImage
+                  key={item.src}
                   src={item.src}
                   alt={item.alt}
                   fill
