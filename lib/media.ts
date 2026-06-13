@@ -1,5 +1,6 @@
 import fs from "fs/promises";
 import path from "path";
+import { DEFAULT_CATEGORY_ID } from "@/lib/categories";
 
 export type MediaType = "image" | "video";
 
@@ -9,13 +10,18 @@ export interface MediaItem {
   src: string;
   alt: string;
   videoSrc?: string;
+  categoryId: string;
 }
 
 const DATA_FILE = path.join(process.cwd(), "data", "media.json");
 
 export async function getMediaItems(): Promise<MediaItem[]> {
   const raw = await fs.readFile(DATA_FILE, "utf-8");
-  return JSON.parse(raw) as MediaItem[];
+  const items = JSON.parse(raw) as MediaItem[];
+  return items.map((item) => ({
+    ...item,
+    categoryId: item.categoryId ?? DEFAULT_CATEGORY_ID,
+  }));
 }
 
 export async function saveMediaItems(items: MediaItem[]): Promise<void> {

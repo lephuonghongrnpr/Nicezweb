@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { revalidatePath } from "next/cache";
 import { isAdminAuthenticated } from "@/lib/auth";
+import { getCategoryById } from "@/lib/categories";
 import { getMediaItems, saveMediaItems, type MediaItem } from "@/lib/media";
 
 export async function GET() {
@@ -20,11 +21,14 @@ export async function PUT(request: Request) {
   }
 
   for (const item of body) {
-    if (!item.id || !item.src || !item.alt || !item.type) {
+    if (!item.id || !item.src || !item.alt || !item.type || !item.categoryId) {
       return NextResponse.json({ error: "Invalid item format" }, { status: 400 });
     }
     if (item.type !== "image" && item.type !== "video") {
       return NextResponse.json({ error: "Invalid media type" }, { status: 400 });
+    }
+    if (!getCategoryById(item.categoryId)) {
+      return NextResponse.json({ error: "Invalid category" }, { status: 400 });
     }
   }
 

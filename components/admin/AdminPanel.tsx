@@ -5,6 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { ExternalLink, Loader2, LogOut, Plus, Trash2, Upload } from "lucide-react";
+import { CATEGORIES, DEFAULT_CATEGORY_ID } from "@/lib/categories";
 import type { MediaItem } from "@/lib/media";
 
 function emptyItem(): MediaItem {
@@ -13,6 +14,7 @@ function emptyItem(): MediaItem {
     type: "image",
     src: "/placeholders/item-2.svg",
     alt: "รายการใหม่",
+    categoryId: DEFAULT_CATEGORY_ID,
   };
 }
 
@@ -223,6 +225,18 @@ export default function AdminPanel() {
                   >
                     <option value="image">รูปภาพ</option>
                     <option value="video">วิดีโอ</option>
+                  </select>
+
+                  <select
+                    value={item.categoryId ?? DEFAULT_CATEGORY_ID}
+                    onChange={(e) => updateItem(item.id, { categoryId: e.target.value })}
+                    className="rounded-lg border border-white/10 bg-black px-3 py-1.5 text-xs outline-none"
+                  >
+                    {CATEGORIES.map((category) => (
+                      <option key={category.id} value={category.id}>
+                        {category.name}
+                      </option>
+                    ))}
                   </select>
                 </div>
 

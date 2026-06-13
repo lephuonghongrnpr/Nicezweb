@@ -3,28 +3,25 @@ import { cookies } from "next/headers";
 
 export const ADMIN_COOKIE = "admin_session";
 
-function getAdminToken(): string | null {
-  const password = process.env.ADMIN_PASSWORD;
-  if (!password) return null;
-  return crypto.createHash("sha256").update(password).digest("hex");
+export function getAdminPassword(): string {
+  return process.env.ADMIN_PASSWORD ?? "123456";
+}
+
+function getAdminToken(): string {
+  return crypto.createHash("sha256").update(getAdminPassword()).digest("hex");
 }
 
 export async function isAdminAuthenticated(): Promise<boolean> {
-  const token = getAdminToken();
-  if (!token) return false;
-
   const cookieStore = await cookies();
   const session = cookieStore.get(ADMIN_COOKIE);
-  return session?.value === token;
+  return session?.value === getAdminToken();
 }
 
 export function verifyAdminPassword(password: string): boolean {
-  const expected = process.env.ADMIN_PASSWORD;
-  if (!expected) return false;
-  return password === expected;
+  return password === getAdminPassword();
 }
 
-export function getSessionToken(): string | null {
+export function getSessionToken(): string {
   return getAdminToken();
 }
 

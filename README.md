@@ -14,16 +14,15 @@
 npm install
 ```
 
-### 3. ตั้งค่า environment
+### 3. ตั้งค่า environment (optional)
 
-คัดลอก `.env.example` เป็น `.env.local` แล้วตั้งรหัสผ่าน admin:
+คัดลอก `.env.example` เป็น `.env.local` ถ้าต้องการตั้ง URL สำหรับ SEO:
 
 ```bash
 cp .env.example .env.local
 ```
 
 ```
-ADMIN_PASSWORD=your-secure-password
 NEXT_PUBLIC_SITE_URL=http://localhost:3000
 ```
 
@@ -48,7 +47,6 @@ npm start
 
 ```
 NEXT_PUBLIC_SITE_URL=https://your-domain.vercel.app
-ADMIN_PASSWORD=your-secure-password
 ```
 
 ใช้สำหรับ Open Graph URL, robots.txt, sitemap และหน้า admin
@@ -83,7 +81,7 @@ vercel
 
 ## Admin — จัดการรูปภาพ
 
-เปิด [http://localhost:3000/admin](http://localhost:3000/admin) แล้ว login ด้วย `ADMIN_PASSWORD`
+เปิด [http://localhost:3000/admin](http://localhost:3000/admin) แล้ว login ด้วยรหัสผ่าน **`123456`** (เปลี่ยนได้ใน `ADMIN_PASSWORD`)
 
 **ทำได้:**
 - อัปโหลดรูป/วิดีโอแทนที่รายการเดิม
@@ -134,7 +132,7 @@ vercel
 app/           → หน้าเว็บ + admin + API routes
 components/    → MediaGrid, MediaCard, MediaLightbox, admin/
 data/          → media.json (ข้อมูลกริด)
-lib/           → media.ts, auth.ts
+lib/           → media.ts
 public/        → รูปภาพ, โลโก้, uploads/
 ```
 
