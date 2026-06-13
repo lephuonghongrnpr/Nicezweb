@@ -1,11 +1,15 @@
 "use client";
 
 import { useCallback, useRef, useState } from "react";
-import { mediaItems } from "@/lib/data";
+import type { MediaItem } from "@/lib/media";
 import MediaCard from "./MediaCard";
 import MediaLightbox from "./MediaLightbox";
 
-export default function MediaGrid() {
+interface MediaGridProps {
+  items: MediaItem[];
+}
+
+export default function MediaGrid({ items }: MediaGridProps) {
   const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
   const cardRefs = useRef<(HTMLElement | null)[]>([]);
 
@@ -30,7 +34,7 @@ export default function MediaGrid() {
         aria-label="แกลเลอรีสินค้า XML UPDATE"
         className="grid grid-cols-1 gap-0.5 sm:grid-cols-2 lg:grid-cols-3"
       >
-        {mediaItems.map((item, index) => (
+        {items.map((item, index) => (
           <div
             key={item.id}
             ref={(el) => {
@@ -44,7 +48,7 @@ export default function MediaGrid() {
 
       {selectedIndex !== null && (
         <MediaLightbox
-          items={mediaItems}
+          items={items}
           selectedIndex={selectedIndex}
           onClose={handleClose}
           onNavigate={handleNavigate}

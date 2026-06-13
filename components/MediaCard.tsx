@@ -3,7 +3,7 @@
 import { useState } from "react";
 import Image from "next/image";
 import { Play } from "lucide-react";
-import type { MediaItem } from "@/lib/data";
+import type { MediaItem } from "@/lib/media";
 
 interface MediaCardProps {
   item: MediaItem;

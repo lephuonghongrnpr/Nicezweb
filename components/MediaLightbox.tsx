@@ -3,7 +3,7 @@
 import { useCallback, useEffect, useRef } from "react";
 import Image from "next/image";
 import { ChevronLeft, ChevronRight, X } from "lucide-react";
-import type { MediaItem } from "@/lib/data";
+import type { MediaItem } from "@/lib/media";
 
 interface MediaLightboxProps {
   items: MediaItem[];

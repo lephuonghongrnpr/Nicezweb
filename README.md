@@ -14,7 +14,20 @@
 npm install
 ```
 
-### 3. รัน dev server
+### 3. ตั้งค่า environment
+
+คัดลอก `.env.example` เป็น `.env.local` แล้วตั้งรหัสผ่าน admin:
+
+```bash
+cp .env.example .env.local
+```
+
+```
+ADMIN_PASSWORD=your-secure-password
+NEXT_PUBLIC_SITE_URL=http://localhost:3000
+```
+
+### 4. รัน dev server
 
 ```bash
 npm run dev
@@ -22,7 +35,7 @@ npm run dev
 
 เปิด [http://localhost:3000](http://localhost:3000)
 
-### 4. Build production
+### 5. Build production
 
 ```bash
 npm run build
@@ -35,9 +48,12 @@ npm start
 
 ```
 NEXT_PUBLIC_SITE_URL=https://your-domain.vercel.app
+ADMIN_PASSWORD=your-secure-password
 ```
 
-ใช้สำหรับ Open Graph URL, robots.txt และ sitemap
+ใช้สำหรับ Open Graph URL, robots.txt, sitemap และหน้า admin
+
+> **หมายเหตุ:** หน้า admin บันทึกข้อมูลลงไฟล์ (`data/media.json` + `public/uploads/`) จึงทำงานได้เต็มที่บน **local หรือ server ที่มี filesystem เขียนได้** (VPS, Railway, Docker) — บน Vercel serverless การบันทึกจะไม่ persist ระหว่าง deploy
 
 ### วิธีที่ 1: ผ่าน GitHub (แนะนำ)
 
@@ -65,24 +81,40 @@ npm i -g vercel
 vercel
 ```
 
-## แก้ไขเนื้อหา
+## Admin — จัดการรูปภาพ
+
+เปิด [http://localhost:3000/admin](http://localhost:3000/admin) แล้ว login ด้วย `ADMIN_PASSWORD`
+
+**ทำได้:**
+- อัปโหลดรูป/วิดีโอแทนที่รายการเดิม
+- แก้คำอธิบาย (alt), ประเภท (รูป/วิดีโอ), URL
+- เพิ่ม/ลบรายการ
+- บันทึกแล้วหน้าแรกอัปเดตทันที
+
+ไฟล์ที่ admin แก้:
+| ไฟล์ | เนื้อหา |
+|------|---------|
+| `data/media.json` | รายการทั้งหมดในกริด |
+| `public/uploads/` | รูป/วิดีโอที่อัปโหลดใหม่ |
+
+## แก้ไขเนื้อหา (แบบ manual)
 
 | สิ่งที่ต้องการแก้ | ไฟล์ |
 |------------------|------|
-| รูป/วิดีโอในกริด | แทนที่ไฟล์ใน `public/placeholders/` แล้วอัปเดต path ใน `lib/data.ts` |
+| รูป/วิดีโอในกริด | ใช้ `/admin` หรือแก้ `data/media.json` โดยตรง |
 | โลโก้ | `public/logo.svg` |
 
 ### เพิ่มวิดีโอ
 
-สำหรับรายการ `type: "video"` ให้ใส่ไฟล์ `.mp4` หรือ `.webm` ใน `public/` แล้วกำหนด `videoSrc`:
+สำหรับรายการ `type: "video"` อัปโหลดไฟล์ `.mp4`/`.webm` ผ่าน admin หรือกำหนด `videoSrc` ใน `data/media.json`:
 
-```ts
+```json
 {
-  id: "1",
-  type: "video",
-  src: "/placeholders/item-1.jpg",      // poster/thumbnail
-  videoSrc: "/videos/showcase-1.mp4",   // ไฟล์วิดีโอจริง
-  alt: "คำอธิบาย",
+  "id": "1",
+  "type": "video",
+  "src": "/uploads/poster.jpg",
+  "videoSrc": "/uploads/showcase-1.mp4",
+  "alt": "คำอธิบาย"
 }
 ```
 
@@ -90,19 +122,20 @@ vercel
 
 ### เพิ่มรายการใหม่
 
-เพิ่ม object ใน array `mediaItems` ใน `lib/data.ts`:
+ใช้ปุ่ม **เพิ่มรายการ** ในหน้า admin หรือเพิ่ม object ใน `data/media.json`:
 
-```ts
-{ id: "13", type: "image", src: "/placeholders/item-13.jpg", alt: "คำอธิบาย" }
+```json
+{ "id": "13", "type": "image", "src": "/uploads/photo.jpg", "alt": "คำอธิบาย" }
 ```
 
 ## โครงสร้างโปรเจกต์
 
 ```
-app/           → หน้าเว็บ (layout, page, styles)
-components/    → MediaGrid, MediaCard, MediaLightbox
-lib/data.ts    → ข้อมูลคงที่ทั้งหมด
-public/        → รูปภาพ, โลโก้, placeholder
+app/           → หน้าเว็บ + admin + API routes
+components/    → MediaGrid, MediaCard, MediaLightbox, admin/
+data/          → media.json (ข้อมูลกริด)
+lib/           → media.ts, auth.ts
+public/        → รูปภาพ, โลโก้, uploads/
 ```
 
 ## Tech Stack
