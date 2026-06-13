@@ -69,7 +69,6 @@ vercel
 
 | สิ่งที่ต้องการแก้ | ไฟล์ |
 |------------------|------|
-| ข้อความ, ราคา, ชื่อโปรไฟล์ | `lib/data.ts` (`captionShort`, `captionFull`) |
 | รูป/วิดีโอในกริด | แทนที่ไฟล์ใน `public/placeholders/` แล้วอัปเดต path ใน `lib/data.ts` |
 | โลโก้ | `public/logo.svg` |
 
@@ -101,7 +100,7 @@ vercel
 
 ```
 app/           → หน้าเว็บ (layout, page, styles)
-components/    → Navbar, MediaGrid, MediaCard, MediaLightbox, ProfileOverlay
+components/    → MediaGrid, MediaCard, MediaLightbox
 lib/data.ts    → ข้อมูลคงที่ทั้งหมด
 public/        → รูปภาพ, โลโก้, placeholder
 ```

@@ -8,29 +8,6 @@ export interface MediaItem {
   videoSrc?: string;
 }
 
-export interface Profile {
-  name: string;
-  avatar: string;
-  captionShort: string;
-  captionFull: string;
-  status: string;
-  following: string;
-  seeMore: string;
-  seeLess: string;
-}
-
-export const profile: Profile = {
-  name: "Gamuan Aroundtech",
-  avatar: "/placeholders/avatar.svg",
-  captionShort: "XML UPDATE Price 259 .-",
-  captionFull:
-    "XML UPDATE Price 259 .- อัปเดตใหม่ล่าสุด พร้อมใช้งานทันที คุณภาพสูง รองรับทุกอุปกรณ์ สั่งซื้อได้เลยวันนี้",
-  status: "เพิ่มรายการสินค้าแล้ว",
-  following: "Following",
-  seeMore: "ดูเพิ่มเติม",
-  seeLess: "ย่อ",
-};
-
 export const mediaItems: MediaItem[] = [
   { id: "1", type: "video", src: "/placeholders/item-1.svg", alt: "XML Update showcase 1" },
   { id: "2", type: "image", src: "/placeholders/item-2.svg", alt: "XML Update showcase 2" },
