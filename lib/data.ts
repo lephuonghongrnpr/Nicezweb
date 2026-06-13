@@ -5,24 +5,30 @@ export interface MediaItem {
   type: MediaType;
   src: string;
   alt: string;
+  videoSrc?: string;
 }
 
 export interface Profile {
   name: string;
   avatar: string;
-  caption: string;
+  captionShort: string;
+  captionFull: string;
   status: string;
   following: string;
   seeMore: string;
+  seeLess: string;
 }
 
 export const profile: Profile = {
   name: "Gamuan Aroundtech",
   avatar: "/placeholders/avatar.svg",
-  caption: "XML UPDATE Price 259 .- ...",
+  captionShort: "XML UPDATE Price 259 .-",
+  captionFull:
+    "XML UPDATE Price 259 .- อัปเดตใหม่ล่าสุด พร้อมใช้งานทันที คุณภาพสูง รองรับทุกอุปกรณ์ สั่งซื้อได้เลยวันนี้",
   status: "เพิ่มรายการสินค้าแล้ว",
   following: "Following",
   seeMore: "ดูเพิ่มเติม",
+  seeLess: "ย่อ",
 };
 
 export const mediaItems: MediaItem[] = [

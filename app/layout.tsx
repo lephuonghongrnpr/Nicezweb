@@ -7,9 +7,41 @@ const inter = Inter({
   variable: "--font-inter",
 });
 
+const siteUrl =
+  process.env.NEXT_PUBLIC_SITE_URL ?? "https://xml-update-gallery.vercel.app";
+
+const title = "XML UPDATE";
+const description =
+  "XML UPDATE Gallery — แกลเลอรี showcase สินค้าและคอนเทนต์ดิจิทัล";
+
 export const metadata: Metadata = {
-  title: "XML UPDATE",
-  description: "XML UPDATE Gallery - Digital content showcase",
+  metadataBase: new URL(siteUrl),
+  title,
+  description,
+  openGraph: {
+    title,
+    description,
+    type: "website",
+    locale: "th_TH",
+    siteName: title,
+    images: [
+      {
+        url: "/placeholders/item-1.svg",
+        width: 1200,
+        height: 630,
+        alt: "XML UPDATE Gallery",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title,
+    description,
+    images: ["/placeholders/item-1.svg"],
+  },
+  icons: {
+    icon: "/logo.svg",
+  },
 };
 
 export default function RootLayout({

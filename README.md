@@ -31,6 +31,14 @@ npm start
 
 ## Deploy บน Vercel
 
+ตั้ง environment variable บน Vercel (Settings → Environment Variables):
+
+```
+NEXT_PUBLIC_SITE_URL=https://your-domain.vercel.app
+```
+
+ใช้สำหรับ Open Graph URL, robots.txt และ sitemap
+
 ### วิธีที่ 1: ผ่าน GitHub (แนะนำ)
 
 1. สร้าง repository บน GitHub
@@ -61,9 +69,25 @@ vercel
 
 | สิ่งที่ต้องการแก้ | ไฟล์ |
 |------------------|------|
-| ข้อความ, ราคา, ชื่อโปรไฟล์ | `lib/data.ts` |
+| ข้อความ, ราคา, ชื่อโปรไฟล์ | `lib/data.ts` (`captionShort`, `captionFull`) |
 | รูป/วิดีโอในกริด | แทนที่ไฟล์ใน `public/placeholders/` แล้วอัปเดต path ใน `lib/data.ts` |
 | โลโก้ | `public/logo.svg` |
+
+### เพิ่มวิดีโอ
+
+สำหรับรายการ `type: "video"` ให้ใส่ไฟล์ `.mp4` หรือ `.webm` ใน `public/` แล้วกำหนด `videoSrc`:
+
+```ts
+{
+  id: "1",
+  type: "video",
+  src: "/placeholders/item-1.jpg",      // poster/thumbnail
+  videoSrc: "/videos/showcase-1.mp4",   // ไฟล์วิดีโอจริง
+  alt: "คำอธิบาย",
+}
+```
+
+ถ้าไม่มี `videoSrc` lightbox จะแสดงรูป poster แทน
 
 ### เพิ่มรายการใหม่
 
@@ -77,7 +101,7 @@ vercel
 
 ```
 app/           → หน้าเว็บ (layout, page, styles)
-components/    → Navbar, MediaGrid, MediaCard, ProfileOverlay, EditFab
+components/    → Navbar, MediaGrid, MediaCard, MediaLightbox, ProfileOverlay
 lib/data.ts    → ข้อมูลคงที่ทั้งหมด
 public/        → รูปภาพ, โลโก้, placeholder
 ```

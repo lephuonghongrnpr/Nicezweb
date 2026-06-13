@@ -19,7 +19,7 @@ export default function Navbar() {
       </div>
 
       <div className="flex items-center gap-2 pr-1">
-        <CheckCircle2 className="h-4 w-4 text-emerald-400" strokeWidth={2.5} />
+        <CheckCircle2 className="h-4 w-4 text-emerald-400" strokeWidth={2.5} aria-hidden />
         <span className="text-xs text-white/80 sm:text-sm">{profile.status}</span>
         <div className="ml-2 hidden h-6 w-0.5 bg-emerald-400 sm:block" />
       </div>

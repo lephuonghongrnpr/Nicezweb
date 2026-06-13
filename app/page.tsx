@@ -1,7 +1,6 @@
 import Navbar from "@/components/Navbar";
 import MediaGrid from "@/components/MediaGrid";
 import ProfileOverlay from "@/components/ProfileOverlay";
-import EditFab from "@/components/EditFab";
 
 export default function Home() {
   return (
@@ -9,6 +8,7 @@ export default function Home() {
       <Navbar />
 
       <main className="pb-32">
+        <h1 className="sr-only">XML UPDATE Gallery</h1>
         <MediaGrid />
       </main>
 
@@ -18,7 +18,6 @@ export default function Home() {
       />
 
       <ProfileOverlay />
-      <EditFab />
     </div>
   );
 }
