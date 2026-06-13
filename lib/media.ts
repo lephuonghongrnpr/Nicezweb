@@ -17,7 +17,7 @@ export interface MediaItem {
 const DATA_FILE = path.join(process.cwd(), "data", "media.json");
 const BLOB_MEDIA_KEY = "media.json";
 
-function useBlobStorage(): boolean {
+function isBlobStorageEnabled(): boolean {
   return Boolean(process.env.BLOB_READ_WRITE_TOKEN);
 }
 
@@ -49,7 +49,7 @@ async function getMediaFromFs(): Promise<MediaItem[]> {
 }
 
 export async function getMediaItems(): Promise<MediaItem[]> {
-  if (useBlobStorage()) {
+  if (isBlobStorageEnabled()) {
     const blobItems = await getMediaFromBlob();
     if (blobItems) return blobItems;
   }
@@ -61,7 +61,7 @@ export async function saveMediaItems(items: MediaItem[]): Promise<void> {
   const normalized = normalizeItems(items);
   const payload = `${JSON.stringify(normalized, null, 2)}\n`;
 
-  if (useBlobStorage()) {
+  if (isBlobStorageEnabled()) {
     await put(BLOB_MEDIA_KEY, payload, {
       access: "public",
       allowOverwrite: true,
@@ -93,7 +93,7 @@ export async function uploadFile(
 ): Promise<{ url: string; isVideo: boolean }> {
   const isVideo = contentType.startsWith("video/");
 
-  if (useBlobStorage()) {
+  if (isBlobStorageEnabled()) {
     const blob = await put(`uploads/${filename}`, data, {
       access: "public",
       contentType,
@@ -108,4 +108,4 @@ export async function uploadFile(
   return { url: `/uploads/${filename}`, isVideo };
 }
 
-export { useBlobStorage };
+export { isBlobStorageEnabled };
