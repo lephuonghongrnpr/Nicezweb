@@ -1,6 +1,14 @@
 import fs from "fs/promises";
 import path from "path";
-import { list, put } from "@vercel/blob";
+import {
+  BLOB_MEDIA_KEY,
+  getBlobSaveErrorMessage,
+  getStorageMode,
+  isBlobStorageEnabled,
+  readJsonBlob,
+  uploadBlobFile,
+  writeJsonBlob,
+} from "@/lib/blob-storage";
 import { normalizeMediaItems } from "@/lib/media-normalize";
 
 export type MediaType = "image" | "video";
@@ -22,30 +30,15 @@ export interface MediaItem {
 }
 
 const DATA_FILE = path.join(process.cwd(), "data", "media.json");
-const BLOB_MEDIA_KEY = "media.json";
-
-function isBlobStorageEnabled(): boolean {
-  return Boolean(process.env.BLOB_READ_WRITE_TOKEN);
-}
 
 function normalizeItems(items: MediaItem[]): MediaItem[] {
   return normalizeMediaItems(items);
 }
 
 async function getMediaFromBlob(): Promise<MediaItem[] | null> {
-  try {
-    const { blobs } = await list({ prefix: BLOB_MEDIA_KEY });
-    const blob = blobs.find((entry) => entry.pathname === BLOB_MEDIA_KEY);
-    if (!blob) return null;
-
-    const res = await fetch(blob.url, { cache: "no-store" });
-    if (!res.ok) return null;
-
-    return normalizeItems((await res.json()) as MediaItem[]);
-  } catch (error) {
-    console.error("Failed to read media from blob:", error);
-    return null;
-  }
+  const data = await readJsonBlob<MediaItem[]>(BLOB_MEDIA_KEY);
+  if (!data) return null;
+  return normalizeItems(data);
 }
 
 async function getMediaFromFs(): Promise<MediaItem[]> {
@@ -53,17 +46,20 @@ async function getMediaFromFs(): Promise<MediaItem[]> {
   return normalizeItems(JSON.parse(raw) as MediaItem[]);
 }
 
-async function seedBlobFromFs(): Promise<MediaItem[]> {
-  const items = await getMediaFromFs();
-  await saveMediaItems(items);
-  return items;
-}
-
 export async function getMediaItems(): Promise<MediaItem[]> {
   if (isBlobStorageEnabled()) {
     const blobItems = await getMediaFromBlob();
     if (blobItems) return blobItems;
-    return seedBlobFromFs();
+
+    const fsItems = await getMediaFromFs().catch(() => null);
+    if (fsItems) {
+      try {
+        await saveMediaItems(fsItems);
+      } catch (error) {
+        console.error("Failed to seed blob from filesystem:", error);
+      }
+      return fsItems;
+    }
   }
 
   return getMediaFromFs();
@@ -74,13 +70,13 @@ export async function saveMediaItems(items: MediaItem[]): Promise<void> {
   const payload = `${JSON.stringify(normalized, null, 2)}\n`;
 
   if (isBlobStorageEnabled()) {
-    await put(BLOB_MEDIA_KEY, payload, {
-      access: "public",
-      allowOverwrite: true,
-      contentType: "application/json",
-      addRandomSuffix: false,
-    });
-    return;
+    try {
+      await writeJsonBlob(BLOB_MEDIA_KEY, payload);
+      return;
+    } catch (error) {
+      console.error("Blob save failed:", error);
+      throw new Error(getBlobSaveErrorMessage(error));
+    }
   }
 
   try {
@@ -109,11 +105,8 @@ export async function uploadFile(
   const isVideo = contentType.startsWith("video/");
 
   if (isBlobStorageEnabled()) {
-    const blob = await put(`uploads/${filename}`, data, {
-      access: "public",
-      contentType,
-    });
-    return { url: blob.url, isVideo };
+    const url = await uploadBlobFile(`uploads/${filename}`, data, contentType);
+    return { url, isVideo };
   }
 
   await ensureUploadDir();
@@ -123,4 +116,4 @@ export async function uploadFile(
   return { url: `/uploads/${filename}`, isVideo };
 }
 
-export { isBlobStorageEnabled };
+export { getStorageMode, isBlobStorageEnabled };

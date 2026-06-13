@@ -60,9 +60,7 @@ export async function PUT(request: Request) {
   } catch (error) {
     console.error("Failed to save media items:", error);
     const message =
-      error instanceof Error && error.message.includes("BLOB_READ_WRITE_TOKEN")
-        ? "ยังไม่ได้ตั้งค่า Blob storage บน Vercel"
-        : "บันทึกลง storage ไม่สำเร็จ";
+      error instanceof Error ? error.message : "บันทึกลง storage ไม่สำเร็จ";
     return NextResponse.json({ error: message }, { status: 500 });
   }
 

@@ -31,6 +31,7 @@ export default function AdminPanel() {
   const [saving, setSaving] = useState(false);
   const [uploadingId, setUploadingId] = useState<string | null>(null);
   const [message, setMessage] = useState("");
+  const [storageHint, setStorageHint] = useState<string | null>(null);
   const fileInputRefs = useRef<Record<string, HTMLInputElement | null>>({});
 
   const loadItems = useCallback(async () => {
@@ -44,6 +45,15 @@ export default function AdminPanel() {
   useEffect(() => {
     loadItems();
   }, [loadItems]);
+
+  useEffect(() => {
+    fetch("/api/admin/storage", { credentials: "include" })
+      .then((res) => (res.ok ? res.json() : null))
+      .then((data: { setupHint?: string | null } | null) => {
+        if (data?.setupHint) setStorageHint(data.setupHint);
+      })
+      .catch(() => {});
+  }, []);
 
   const showMessage = (text: string) => {
     setMessage(text);
@@ -178,6 +188,12 @@ export default function AdminPanel() {
       </div>
 
       <div className="mx-auto max-w-6xl px-4 py-6 sm:px-6">
+        {storageHint && (
+          <div className="mb-4 rounded-lg border border-amber-500/30 bg-amber-500/10 px-4 py-3 text-sm text-amber-200">
+            ⚠️ {storageHint}
+          </div>
+        )}
+
         <button
           type="button"
           onClick={handleAdd}
