@@ -6,7 +6,9 @@ import { getMediaItems, saveMediaItems, type MediaItem } from "@/lib/media";
 
 export async function GET() {
   const items = await getMediaItems();
-  return NextResponse.json(items);
+  return NextResponse.json(items, {
+    headers: { "Cache-Control": "no-store" },
+  });
 }
 
 export async function PUT(request: Request) {
@@ -21,7 +23,7 @@ export async function PUT(request: Request) {
   }
 
   for (const item of body) {
-    if (!item.id || !item.src || !item.alt || !item.type || !item.categoryId) {
+    if (!item.id || !item.src || !item.type || !item.categoryId) {
       return NextResponse.json({ error: "Invalid item format" }, { status: 400 });
     }
     if (item.type !== "image" && item.type !== "video") {
@@ -33,10 +35,12 @@ export async function PUT(request: Request) {
   }
 
   await saveMediaItems(body);
-  revalidatePath("/");
+  revalidatePath("/", "layout");
   revalidatePath("/admin");
+  revalidatePath("/products");
   revalidatePath("/category/general");
   revalidatePath("/category/recommended");
 
-  return NextResponse.json(body);
+  const items = await getMediaItems();
+  return NextResponse.json(items);
 }

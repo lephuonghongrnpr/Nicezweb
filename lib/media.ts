@@ -18,6 +18,7 @@ export interface MediaItem {
   description?: string;
   buyUrl?: string;
   badge?: ProductBadge;
+  stock?: number;
 }
 
 const DATA_FILE = path.join(process.cwd(), "data", "media.json");
@@ -32,9 +33,11 @@ function normalizeItems(items: MediaItem[]): MediaItem[] {
     ...item,
     categoryId: item.categoryId ?? DEFAULT_CATEGORY_ID,
     name: item.name ?? item.alt,
+    alt: item.alt ?? item.name ?? "สินค้า",
     price: typeof item.price === "number" ? item.price : 259,
     description: item.description ?? "",
     badge: item.badge ?? null,
+    stock: typeof item.stock === "number" ? item.stock : 99,
   }));
 }
 
@@ -58,10 +61,17 @@ async function getMediaFromFs(): Promise<MediaItem[]> {
   return normalizeItems(JSON.parse(raw) as MediaItem[]);
 }
 
+async function seedBlobFromFs(): Promise<MediaItem[]> {
+  const items = await getMediaFromFs();
+  await saveMediaItems(items);
+  return items;
+}
+
 export async function getMediaItems(): Promise<MediaItem[]> {
   if (isBlobStorageEnabled()) {
     const blobItems = await getMediaFromBlob();
     if (blobItems) return blobItems;
+    return seedBlobFromFs();
   }
 
   return getMediaFromFs();
@@ -82,7 +92,7 @@ export async function saveMediaItems(items: MediaItem[]): Promise<void> {
   try {
     await fs.writeFile(DATA_FILE, payload, "utf-8");
   } catch {
-    // Vercel serverless may not allow writing to disk — blob is the source of truth there.
+    // Vercel serverless — blob is the source of truth.
   }
 }
 

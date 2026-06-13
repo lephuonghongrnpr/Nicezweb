@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useRef } from "react";
 import MediaImage from "@/components/MediaImage";
-import { ChevronLeft, ChevronRight, MessageCircle, ShoppingBag, X } from "lucide-react";
+import { ChevronLeft, ChevronRight, ShoppingBag, X } from "lucide-react";
 import { formatPrice, getBuyUrl } from "@/lib/site";
 import type { MediaItem } from "@/lib/media";
 
@@ -66,7 +66,7 @@ export default function ProductModal({
       className="fixed inset-0 z-50 flex items-end justify-center bg-black/85 p-0 backdrop-blur-sm sm:items-center sm:p-4"
       onClick={(e) => e.target === dialogRef.current && onClose()}
     >
-      <div className="relative flex max-h-[95vh] w-full max-w-lg flex-col overflow-hidden rounded-t-2xl border border-white/10 bg-[#111118] sm:rounded-2xl">
+      <div className="relative flex max-h-[95vh] w-full max-w-lg flex-col overflow-hidden rounded-t-2xl border border-[#222] bg-[#141414] sm:rounded-2xl">
         <button
           ref={closeButtonRef}
           type="button"
@@ -97,45 +97,22 @@ export default function ProductModal({
           <h2 id="product-title" className="mb-1 text-lg font-bold text-white">
             {item.name}
           </h2>
-          <p className="mb-3 text-2xl font-black text-orange-400">{formatPrice(item.price)}</p>
+          <p className="mb-1 text-2xl font-black text-red-500">{formatPrice(item.price)}</p>
+          <p className="mb-3 text-xs text-white/40">คงเหลือ {item.stock ?? 99} ชิ้น</p>
 
           {item.description && (
             <p className="mb-4 text-sm leading-relaxed text-white/60">{item.description}</p>
           )}
 
-          <div className="mb-4 flex flex-wrap gap-2 text-[10px]">
-            <span className="rounded-full border border-orange-500/20 bg-orange-500/10 px-2.5 py-1 text-orange-300">
-              FiveM XML
-            </span>
-            <span className="rounded-full border border-white/10 bg-white/5 px-2.5 py-1 text-white/50">
-              อัปเดตฟรี
-            </span>
-            <span className="rounded-full border border-white/10 bg-white/5 px-2.5 py-1 text-white/50">
-              ไฟล์พร้อมใช้
-            </span>
-          </div>
-
           <a
             href={buyUrl}
             target="_blank"
             rel="noopener noreferrer"
-            className="mb-3 flex w-full items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-orange-500 to-orange-600 py-3 text-sm font-bold text-white shadow-lg shadow-orange-500/20 transition-transform hover:scale-[1.01] active:scale-[0.99]"
+            className="flex w-full items-center justify-center gap-2 rounded-lg bg-red-600 py-3 text-sm font-bold text-white transition-colors hover:bg-red-500"
           >
             <ShoppingBag className="h-4 w-4" />
-            สั่งซื้อเลย
+            ซื้อเลย
           </a>
-
-          {buyUrl !== "#" && (
-            <a
-              href={buyUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex w-full items-center justify-center gap-2 rounded-xl border border-white/10 py-2.5 text-sm text-white/70 hover:bg-white/5"
-            >
-              <MessageCircle className="h-4 w-4" />
-              ติดต่อสอบถาม
-            </a>
-          )}
         </div>
 
         {(hasPrev || hasNext) && (

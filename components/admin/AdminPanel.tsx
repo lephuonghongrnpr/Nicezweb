@@ -19,6 +19,7 @@ function emptyItem(): MediaItem {
     description: "",
     categoryId: DEFAULT_CATEGORY_ID,
     badge: null,
+    stock: 99,
   };
 }
 
@@ -32,7 +33,7 @@ export default function AdminPanel() {
   const fileInputRefs = useRef<Record<string, HTMLInputElement | null>>({});
 
   const loadItems = useCallback(async () => {
-    const res = await fetch("/api/media");
+    const res = await fetch("/api/media", { cache: "no-store" });
     if (res.ok) {
       setItems(await res.json());
     }
@@ -118,46 +119,48 @@ export default function AdminPanel() {
 
   if (loading) {
     return (
-      <div className="flex min-h-screen items-center justify-center bg-black">
-        <Loader2 className="h-6 w-6 animate-spin text-white/60" />
+      <div className="flex min-h-[50vh] items-center justify-center">
+        <Loader2 className="h-6 w-6 animate-spin text-red-400/60" />
       </div>
     );
   }
 
   return (
     <div className="min-h-screen bg-black text-white">
-      <header className="sticky top-0 z-10 flex items-center justify-between border-b border-white/10 bg-black/95 px-4 py-3 backdrop-blur sm:px-6">
-        <div>
-          <h1 className="text-base font-semibold">Admin — XML FIVEM</h1>
-          <p className="text-xs text-white/50">{items.length} สินค้า</p>
+      <div className="border-b border-[#1a1a1a] bg-[#141414]/50 px-4 py-3 sm:px-6">
+        <div className="mx-auto flex max-w-6xl items-center justify-between">
+          <div>
+            <h1 className="text-base font-semibold">จัดการสินค้า</h1>
+            <p className="text-xs text-white/50">{items.length} รายการ</p>
+          </div>
+          <div className="flex items-center gap-2">
+            {message && <span className="text-xs text-red-400">{message}</span>}
+            {saving && <Loader2 className="h-4 w-4 animate-spin text-white/50" />}
+            <Link
+              href="/"
+              target="_blank"
+              className="flex items-center gap-1 rounded-lg border border-white/10 px-3 py-1.5 text-xs text-white/70 hover:bg-white/5"
+            >
+              ดูเว็บ
+              <ExternalLink className="h-3 w-3" />
+            </Link>
+            <button
+              type="button"
+              onClick={handleLogout}
+              className="flex items-center gap-1 rounded-lg border border-white/10 px-3 py-1.5 text-xs text-white/70 hover:bg-white/5"
+            >
+              <LogOut className="h-3 w-3" />
+              ออก
+            </button>
+          </div>
         </div>
-        <div className="flex items-center gap-2">
-          {message && <span className="text-xs text-emerald-400">{message}</span>}
-          {saving && <Loader2 className="h-4 w-4 animate-spin text-white/50" />}
-          <Link
-            href="/"
-            target="_blank"
-            className="flex items-center gap-1 rounded-lg border border-white/10 px-3 py-1.5 text-xs text-white/70 hover:bg-white/5"
-          >
-            ดูเว็บ
-            <ExternalLink className="h-3 w-3" />
-          </Link>
-          <button
-            type="button"
-            onClick={handleLogout}
-            className="flex items-center gap-1 rounded-lg border border-white/10 px-3 py-1.5 text-xs text-white/70 hover:bg-white/5"
-          >
-            <LogOut className="h-3 w-3" />
-            ออก
-          </button>
-        </div>
-      </header>
+      </div>
 
-      <div className="mx-auto max-w-5xl px-4 py-6 sm:px-6">
+      <div className="mx-auto max-w-6xl px-4 py-6 sm:px-6">
         <button
           type="button"
           onClick={handleAdd}
-          className="mb-6 flex items-center gap-2 rounded-lg bg-orange-500 px-4 py-2 text-sm font-medium text-white hover:bg-orange-400"
+          className="mb-6 flex items-center gap-2 rounded-lg bg-red-500 px-4 py-2 text-sm font-medium text-white hover:bg-red-400"
         >
           <Plus className="h-4 w-4" />
           เพิ่มรายการ
@@ -167,7 +170,7 @@ export default function AdminPanel() {
           {items.map((item, index) => (
             <div
               key={item.id}
-              className="flex flex-col gap-4 rounded-xl border border-white/10 bg-neutral-950 p-4 sm:flex-row"
+              className="flex flex-col gap-4 rounded-xl border border-[#222] bg-[#141414] p-4 sm:flex-row"
             >
               <div className="relative h-32 w-full shrink-0 overflow-hidden rounded-lg bg-black sm:h-28 sm:w-28">
                 <MediaImage
@@ -259,7 +262,7 @@ export default function AdminPanel() {
                   </select>
                 </div>
 
-                <div className="grid gap-3 sm:grid-cols-2">
+                <div className="grid gap-3 sm:grid-cols-3">
                   <div>
                     <label className="mb-1 block text-xs text-white/50">ชื่อสินค้า</label>
                     <input
@@ -268,7 +271,7 @@ export default function AdminPanel() {
                       onChange={(e) =>
                         updateItem(item.id, { name: e.target.value, alt: e.target.value })
                       }
-                      className="w-full rounded-lg border border-white/10 bg-black px-3 py-1.5 text-sm outline-none focus:border-orange-400/50"
+                      className="w-full rounded-lg border border-white/10 bg-black px-3 py-1.5 text-sm outline-none focus:border-red-400/50"
                     />
                   </div>
                   <div>
@@ -280,7 +283,19 @@ export default function AdminPanel() {
                       onChange={(e) =>
                         updateItem(item.id, { price: Number(e.target.value) || 0 })
                       }
-                      className="w-full rounded-lg border border-white/10 bg-black px-3 py-1.5 text-sm outline-none focus:border-orange-400/50"
+                      className="w-full rounded-lg border border-white/10 bg-black px-3 py-1.5 text-sm outline-none focus:border-red-400/50"
+                    />
+                  </div>
+                  <div>
+                    <label className="mb-1 block text-xs text-white/50">สต็อก (ชิ้น)</label>
+                    <input
+                      type="number"
+                      min={0}
+                      value={item.stock ?? 99}
+                      onChange={(e) =>
+                        updateItem(item.id, { stock: Number(e.target.value) || 0 })
+                      }
+                      className="w-full rounded-lg border border-white/10 bg-black px-3 py-1.5 text-sm outline-none focus:border-red-400/50"
                     />
                   </div>
                 </div>
@@ -291,7 +306,7 @@ export default function AdminPanel() {
                     value={item.description ?? ""}
                     onChange={(e) => updateItem(item.id, { description: e.target.value })}
                     rows={2}
-                    className="w-full rounded-lg border border-white/10 bg-black px-3 py-1.5 text-sm outline-none focus:border-orange-400/50"
+                    className="w-full rounded-lg border border-white/10 bg-black px-3 py-1.5 text-sm outline-none focus:border-red-400/50"
                   />
                 </div>
 
@@ -302,7 +317,7 @@ export default function AdminPanel() {
                     value={item.buyUrl ?? ""}
                     onChange={(e) => updateItem(item.id, { buyUrl: e.target.value || undefined })}
                     placeholder="https://line.me/..."
-                    className="w-full rounded-lg border border-white/10 bg-black px-3 py-1.5 text-sm outline-none focus:border-orange-400/50"
+                    className="w-full rounded-lg border border-white/10 bg-black px-3 py-1.5 text-sm outline-none focus:border-red-400/50"
                   />
                 </div>
 
@@ -312,7 +327,7 @@ export default function AdminPanel() {
                     type="text"
                     value={item.src}
                     onChange={(e) => updateItem(item.id, { src: e.target.value })}
-                    className="w-full rounded-lg border border-white/10 bg-black px-3 py-1.5 text-sm outline-none focus:border-orange-400/50"
+                    className="w-full rounded-lg border border-white/10 bg-black px-3 py-1.5 text-sm outline-none focus:border-red-400/50"
                   />
                 </div>
 
@@ -324,7 +339,7 @@ export default function AdminPanel() {
                       value={item.videoSrc ?? ""}
                       onChange={(e) => updateItem(item.id, { videoSrc: e.target.value || undefined })}
                       placeholder="/uploads/video.mp4"
-                      className="w-full rounded-lg border border-white/10 bg-black px-3 py-1.5 text-sm outline-none focus:border-orange-400/50"
+                      className="w-full rounded-lg border border-white/10 bg-black px-3 py-1.5 text-sm outline-none focus:border-red-400/50"
                     />
                   </div>
                 )}
@@ -338,7 +353,7 @@ export default function AdminPanel() {
             type="button"
             disabled={saving}
             onClick={() => saveItems(items)}
-            className="rounded-lg bg-white px-6 py-2.5 text-sm font-medium text-black shadow-lg hover:bg-white/90 disabled:opacity-50"
+            className="rounded-lg bg-red-600 px-6 py-2.5 text-sm font-semibold text-white hover:bg-red-500 disabled:opacity-50"
           >
             {saving ? "กำลังบันทึก..." : "บันทึกทั้งหมด"}
           </button>

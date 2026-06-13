@@ -12,14 +12,14 @@ export const CATEGORIES: Category[] = [
     name: "สินค้าทั่วไป",
     shortName: "ทั่วไป",
     href: "/category/general",
-    description: "XML FiveM หลากหลายประเภท — เลือกได้ตามต้องการ",
+    description: "XML FiveM หลากหลายประเภท",
   },
   {
     id: "recommended",
     name: "รายการแนะนำสำหรับคุณ",
     shortName: "แนะนำ",
     href: "/category/recommended",
-    description: "สินค้ายอดนิยม ขายดี แนะนำโดยเฉพาะ",
+    description: "สินค้ายอดนิยม ขายดี",
   },
 ];
 
@@ -29,13 +29,18 @@ export function getCategoryById(id: string): Category | undefined {
   return CATEGORIES.find((c) => c.id === id);
 }
 
-export const NAV_ITEMS = [
-  { id: "home", label: "หน้าแรก", shortLabel: "หน้าแรก", href: "/" },
-  ...CATEGORIES.map((c) => ({
-    id: c.id,
-    label: c.name,
-    shortLabel: c.shortName,
-    href: c.href,
-  })),
-  { id: "admin", label: "Admin", shortLabel: "Admin", href: "/admin" },
-] as const;
+export interface NavItem {
+  id: string;
+  label: string;
+  href: string;
+  external?: boolean;
+}
+
+export const MAIN_NAV: NavItem[] = [
+  { id: "home", label: "หน้าแรก", href: "/" },
+  { id: "products", label: "สินค้าทั้งหมด", href: "/products" },
+  { id: "topup", label: "เติมเงิน", href: "/topup" },
+  { id: "history", label: "เช็คประวัติการซื้อ", href: "/history" },
+  { id: "contact", label: "ติดต่อ", href: "/contact" },
+  { id: "discord", label: "เข้าร่วม Discord", href: "/discord", external: true },
+];
