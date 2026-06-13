@@ -1,7 +1,7 @@
 import fs from "fs/promises";
 import path from "path";
 import { list, put } from "@vercel/blob";
-import { DEFAULT_CATEGORY_ID } from "@/lib/categories";
+import { normalizeMediaItems } from "@/lib/media-normalize";
 
 export type MediaType = "image" | "video";
 export type ProductBadge = "new" | "hot" | "sale" | null;
@@ -29,21 +29,12 @@ function isBlobStorageEnabled(): boolean {
 }
 
 function normalizeItems(items: MediaItem[]): MediaItem[] {
-  return items.map((item) => ({
-    ...item,
-    categoryId: item.categoryId ?? DEFAULT_CATEGORY_ID,
-    name: item.name ?? item.alt,
-    alt: item.alt ?? item.name ?? "สินค้า",
-    price: typeof item.price === "number" ? item.price : 259,
-    description: item.description ?? "",
-    badge: item.badge ?? null,
-    stock: typeof item.stock === "number" ? item.stock : 99,
-  }));
+  return normalizeMediaItems(items);
 }
 
 async function getMediaFromBlob(): Promise<MediaItem[] | null> {
   try {
-    const { blobs } = await list({ prefix: BLOB_MEDIA_KEY, limit: 1 });
+    const { blobs } = await list({ prefix: BLOB_MEDIA_KEY });
     const blob = blobs.find((entry) => entry.pathname === BLOB_MEDIA_KEY);
     if (!blob) return null;
 
@@ -51,7 +42,8 @@ async function getMediaFromBlob(): Promise<MediaItem[] | null> {
     if (!res.ok) return null;
 
     return normalizeItems((await res.json()) as MediaItem[]);
-  } catch {
+  } catch (error) {
+    console.error("Failed to read media from blob:", error);
     return null;
   }
 }
@@ -86,13 +78,16 @@ export async function saveMediaItems(items: MediaItem[]): Promise<void> {
       access: "public",
       allowOverwrite: true,
       contentType: "application/json",
+      addRandomSuffix: false,
     });
+    return;
   }
 
   try {
     await fs.writeFile(DATA_FILE, payload, "utf-8");
-  } catch {
-    // Vercel serverless — blob is the source of truth.
+  } catch (error) {
+    console.error("Failed to write media.json:", error);
+    throw new Error("Cannot save media without Blob storage on this host");
   }
 }
 

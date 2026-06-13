@@ -7,6 +7,7 @@ import { useRouter } from "next/navigation";
 import { ExternalLink, Loader2, LogOut, Plus, Trash2, Upload } from "lucide-react";
 import { CATEGORIES, DEFAULT_CATEGORY_ID } from "@/lib/categories";
 import type { MediaItem } from "@/lib/media";
+import { normalizeMediaItems } from "@/lib/media-normalize";
 
 function emptyItem(): MediaItem {
   return {
@@ -33,9 +34,9 @@ export default function AdminPanel() {
   const fileInputRefs = useRef<Record<string, HTMLInputElement | null>>({});
 
   const loadItems = useCallback(async () => {
-    const res = await fetch("/api/media", { cache: "no-store" });
+    const res = await fetch("/api/media", { cache: "no-store", credentials: "include" });
     if (res.ok) {
-      setItems(await res.json());
+      setItems(normalizeMediaItems(await res.json()));
     }
     setLoading(false);
   }, []);
@@ -50,21 +51,33 @@ export default function AdminPanel() {
   };
 
   const saveItems = async (nextItems: MediaItem[]) => {
+    const payload = normalizeMediaItems(nextItems);
     setSaving(true);
-    const res = await fetch("/api/media", {
-      method: "PUT",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(nextItems),
-    });
 
-    if (res.ok) {
-      setItems(await res.json());
-      showMessage("บันทึกแล้ว");
-      router.refresh();
-    } else {
-      showMessage("บันทึกไม่สำเร็จ");
+    try {
+      const res = await fetch("/api/media", {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        credentials: "include",
+        body: JSON.stringify(payload),
+      });
+
+      const data = (await res.json().catch(() => ({}))) as MediaItem[] | { error?: string };
+
+      if (res.ok && Array.isArray(data)) {
+        setItems(normalizeMediaItems(data));
+        showMessage("บันทึกแล้ว");
+        router.refresh();
+      } else {
+        const errorText =
+          !Array.isArray(data) && data.error ? data.error : "บันทึกไม่สำเร็จ";
+        showMessage(errorText);
+      }
+    } catch {
+      showMessage("เชื่อมต่อเซิร์ฟเวอร์ไม่สำเร็จ");
+    } finally {
+      setSaving(false);
     }
-    setSaving(false);
   };
 
   const updateItem = (id: string, patch: Partial<MediaItem>) => {
@@ -76,7 +89,11 @@ export default function AdminPanel() {
     const formData = new FormData();
     formData.append("file", file);
 
-    const res = await fetch("/api/media/upload", { method: "POST", body: formData });
+    const res = await fetch("/api/media/upload", {
+      method: "POST",
+      credentials: "include",
+      body: formData,
+    });
 
     if (!res.ok) {
       const data = await res.json();
@@ -134,7 +151,11 @@ export default function AdminPanel() {
             <p className="text-xs text-white/50">{items.length} รายการ</p>
           </div>
           <div className="flex items-center gap-2">
-            {message && <span className="text-xs text-red-400">{message}</span>}
+            {message && (
+              <span className="max-w-[240px] truncate text-xs text-red-400 sm:max-w-none">
+                {message}
+              </span>
+            )}
             {saving && <Loader2 className="h-4 w-4 animate-spin text-white/50" />}
             <Link
               href="/"
